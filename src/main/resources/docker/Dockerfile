@@ -9,5 +9,4 @@ WORKDIR /home/spring-boot-rest
 RUN git checkout deploy
 EXPOSE 8080
 
-RUN java -jar /home/spring-boot-rest/deploy/spring-boot-rest-0.0.1-SNAPSHOT.jar
 ENTRYPOINT ["java","-jar","/home/spring-boot-rest/deploy/spring-boot-rest-0.0.1-SNAPSHOT.jar"]
