@@ -26,6 +26,7 @@
 		<spring-cloud.version>Finchley.RC1</spring-cloud.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.0</jaxws.version>
+		<docker.image.prefix>tsanm</docker.image.prefix>
 	</properties>
 
 	<dependencies>
@@ -66,12 +67,12 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -101,7 +102,6 @@
 			<artifactId>jaxws-rt</artifactId>
 			<version>${jaxws.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>
@@ -132,12 +132,12 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/deploy</outputDirectory>
+							<outputDirectory>target</outputDirectory>
 							<resources>
 								<resource>
-									<directory>target</directory>
+									<directory>${basedir}/src/main/resources/docker</directory>
 									<includes>
-										<include>spring-boot-rest*.jar</include>
+										<include>*</include>
 									</includes>
 								</resource>
 							</resources>
@@ -145,6 +145,18 @@
 					</execution>
 				</executions>
 			</plugin>
+	        <plugin>
+	            <groupId>com.spotify</groupId>
+	            <artifactId>dockerfile-maven-plugin</artifactId>
+	            <version>1.4.0</version>
+	            <configuration>
+	            	<contextDirectory>${project.basedir}/target</contextDirectory>
+	                <repository>${docker.image.prefix}/${project.artifactId}</repository>
+	                <buildArgs>
+	                    <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+	                </buildArgs>
+	            </configuration>
+	        </plugin>
 		</plugins>
 	</build>
 
